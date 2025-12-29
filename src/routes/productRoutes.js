@@ -1,28 +1,20 @@
 const express = require('express');
-const { protect, admin } = require('../middleware/authMiddleware');
-
 const router = express.Router();
+const {
+  getAllProducts,
+  getProductById,
+  getProductsByCategory,
+  searchProducts,
+  addReview,
+  createProduct
+} = require('../controllers/productController');
+const { protect } = require('../middleware/authMiddleware');
 
-router.get('/', async (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get all products',
-    data: []
-  });
-});
-
-router.get('/:id', async (req, res) => {
-  res.json({
-    success: true,
-    message: 'Get single product'
-  });
-});
-
-router.post('/', protect, admin, async (req, res) => {
-  res.json({
-    success: true,
-    message: 'Create product'
-  });
-});
+router.get('/', getAllProducts);
+router.get('/search', searchProducts);
+router.get('/category/:categorySlug', getProductsByCategory);
+router.get('/:id', getProductById);
+router.post('/:id/reviews', protect, addReview);
+router.post('/', createProduct); // For testing - add admin middleware later
 
 module.exports = router;

@@ -1,22 +1,28 @@
 const express = require('express');
+const router = express.Router();
+const {
+  getProfile,
+  updateProfile,
+  getAddresses,
+  addAddress,
+  updateAddress,
+  deleteAddress,
+  setDefaultAddress
+} = require('../controllers/userController');
 const { protect } = require('../middleware/authMiddleware');
 
-const router = express.Router();
+// All user routes require authentication
+router.use(protect);
 
-// Get user profile
-router.get('/profile', protect, (req, res) => {
-  res.json({
-    success: true,
-    data: req.user
-  });
-});
+// Profile routes
+router.get('/profile', getProfile);
+router.put('/profile', updateProfile);
 
-// Update user profile
-router.put('/profile', protect, async (req, res) => {
-  res.json({
-    success: true,
-    message: 'Profile update endpoint'
-  });
-});
+// Address routes
+router.get('/addresses', getAddresses);
+router.post('/addresses', addAddress);
+router.put('/addresses/:addressId', updateAddress);
+router.delete('/addresses/:addressId', deleteAddress);
+router.put('/addresses/:addressId/set-default', setDefaultAddress);
 
 module.exports = router;
